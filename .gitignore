@@ -1,0 +1,8 @@
+# dependencies
+/node_modules
+
+# client app
+/client
+
+# mern_one.code-workspace
+/mern_one.code-workspace
