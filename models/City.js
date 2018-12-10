@@ -2,12 +2,20 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 //Create Schema
-const CitySchema = new Schema({
-  name: String,
-  country: String
+const schema = new Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
+  },
+  itineraries: [{ type: Schema.Types.ObjectId, ref: "Itinerary" }]
 });
 
-module.exports = mongoose.model("City", CitySchema);
+//Export schema as a module
+module.exports = mongoose.model("City", schema);
 
 //To use our schema definition, we need to convert our CitySchema into a Model we can work with. Doing this while exporting.
 
