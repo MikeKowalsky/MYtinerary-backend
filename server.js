@@ -59,30 +59,32 @@ app.use("/", router);
 router.get("/", (req, res) => res.send("Hello guy's! This is home page!"));
 router.get("/test", (req, res) => res.send("HELLO WORLD!"));
 
-// retrieving using schema
-const CityModel = require("./models/City");
+// retrieving all cities using schema
+const City = require("./models/City");
 router.get("/cities/all", (req, res) => {
-  CityModel.find()
+  City.find()
     .then(docs => res.send(docs))
     .catch(err => console.log(err));
 });
 
-const ItineraryModel = require("./models/Itinerary");
+// retrieving all itineraries using schema
+const Itinerary = require("./models/Itinerary");
 router.get("/itineraries/all", (req, res) => {
-  ItineraryModel.find()
+  Itinerary.find()
     .then(docs => res.send(docs))
     .catch(err => console.log(err));
 });
 
+// adding data to itineraries collection
 router.post("/addData", (req, res) => {
   console.log(req.body);
 
-  CityModel.findOne({ name: "Barcelona" }, (err, city) => {
+  City.findOne({ name: req.body.cityName }, (err, city) => {
     if (err) console.log(err);
 
     console.log(city._id);
 
-    const newItinerary = new ItineraryModel({
+    const newItinerary = new Itinerary({
       _id: new mongoose.Types.ObjectId(),
       author: req.body.author,
       city: city._id,
@@ -98,6 +100,23 @@ router.post("/addData", (req, res) => {
     });
 
     res.send("created new Itinerary");
+  });
+});
+
+// retrieving itineraries for one particular city
+router.get("/itineraries/:cityName", (req, res) => {
+  console.log(req.params.cityName);
+  // let cityId;
+
+  City.findOne({ name: req.params.cityName }, (err, city) => {
+    if (err) console.log(err);
+    const cityId = city._id;
+    console.log(cityId);
+
+    Itinerary.find({ city: cityId }, (err, itineraryList) => {
+      if (err) console.log(err);
+      res.send(itineraryList);
+    });
   });
 });
 
