@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-// const Itinerary = require("./Itinerary");
 
 //Create Schema
 const schema = new Schema({
@@ -11,8 +10,7 @@ const schema = new Schema({
   country: {
     type: String,
     required: true
-  },
-  itineraries: [{ type: Schema.Types.ObjectId, ref: "Itinerary" }]
+  }
 });
 
 //Export schema as a module
