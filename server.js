@@ -104,7 +104,7 @@ router.post("/addData", (req, res) => {
 });
 
 // retrieving itineraries for one particular city
-router.get("/itineraries/:cityName", (req, res) => {
+router.get("/itinerary/:cityName", (req, res) => {
   console.log(req.params.cityName);
   // let cityId;
 
