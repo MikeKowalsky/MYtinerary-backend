@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 // initialize app
 const app = express();
@@ -9,9 +10,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // mongoose connect
-const mongoose = require("mongoose");
-const dev_db_url = "mongodb://mike:mike666@ds211504.mlab.com:11504/mern_one";
-const mongoDB = process.env.MONGODB_URI || dev_db_url;
+const mongoDB = `mongodb://${process.env.MONGO_USER}:${
+  process.env.MONGO_PASSWORD
+}@ds211504.mlab.com:11504/${process.env.MONGO_DB}`;
 
 mongoose
   .connect(
@@ -20,18 +21,6 @@ mongoose
   )
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
-
-const db = mongoose.connection;
-// mongoose.Promise = global.Promise;  // ?? don't know if I need this
-
-// just retrieving whole collection
-// app.get("/cities", (req, res) => {
-//   db.collection("cities")
-//     .find()
-//     .toArray((err, results) => {
-//       res.send(results);
-//     });
-// });
 
 // acts as a middleware
 // to handle CORS Errors
@@ -111,7 +100,7 @@ router.get("/itinerary/:cityName", (req, res) => {
   City.findOne({ name: req.params.cityName }, (err, city) => {
     if (err) console.log(err);
     const cityId = city._id;
-    console.log(cityId);
+    // console.log(cityId);
 
     Itinerary.find({ city: cityId }, (err, itineraryList) => {
       if (err) console.log(err);
