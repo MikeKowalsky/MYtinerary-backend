@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//Create Schema
+// Create schema
 const itinerarySchema = new Schema({
   city: {
     type: Schema.Types.ObjectId,
@@ -19,6 +19,10 @@ const itinerarySchema = new Schema({
     type: Number,
     required: true
   },
+  likes: {
+    type: Number,
+    required: true
+  },
   duration: {
     type: Number,
     required: true
@@ -29,7 +33,19 @@ const itinerarySchema = new Schema({
   },
   tags: {
     type: [String]
-  }
+  },
+  activities: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      url: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
 
 //Export schema as a module

@@ -12,6 +12,7 @@ const City = require("../../models/City");
 // @access  Public
 router.get("/all", (req, res) => {
   Itinerary.find()
+    .populate("city", ["id", "name"])
     .then(docs => res.send(docs))
     .catch(err => console.log(err));
 });
@@ -30,9 +31,11 @@ router.post("/add", (req, res) => {
       city: city._id,
       name: req.body.name,
       rating: req.body.rating,
+      likes: req.body.likes,
       duration: req.body.duration,
       priceRange: req.body.priceRange,
-      tags: req.body.tags
+      tags: req.body.tags,
+      activities: req.body.activities
     });
 
     newItinerary.save(err => {
