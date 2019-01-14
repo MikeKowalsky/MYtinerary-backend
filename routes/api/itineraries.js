@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-// Load Itinerary model
+// Load itinerary model
 const Itinerary = require("../../models/Itinerary");
-// Load City model
+
+// Load city model
 const City = require("../../models/City");
 
 // @route   GET api/itineraries
@@ -35,7 +36,8 @@ router.post("/", (req, res) => {
       duration: req.body.duration,
       priceRange: req.body.priceRange,
       tags: req.body.tags,
-      activities: req.body.activities
+      activities: req.body.activities,
+      images: req.body.images
     });
 
     newItinerary.save(err => {

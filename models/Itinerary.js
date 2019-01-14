@@ -45,6 +45,18 @@ const itinerarySchema = new Schema({
         required: true
       }
     }
+  ],
+  images: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      url: {
+        type: String,
+        required: true
+      }
+    }
   ]
 });
 
