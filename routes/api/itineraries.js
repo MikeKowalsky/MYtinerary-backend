@@ -7,20 +7,20 @@ const Itinerary = require("../../models/Itinerary");
 // Load City model
 const City = require("../../models/City");
 
-// @route   GET api/itinerary/all
+// @route   GET api/itineraries
 // @desc    Get all itineraries
 // @access  Public
-router.get("/all", (req, res) => {
+router.get("/", (req, res) => {
   Itinerary.find()
     .populate("city", ["id", "name"])
     .then(docs => res.send(docs))
     .catch(err => console.log(err));
 });
 
-// @route   POST api/itinerary/add
+// @route   POST api/itineraries
 // @desc    Add itinerary
 // @access  Public
-router.post("/add", (req, res) => {
+router.post("/", (req, res) => {
   // console.log(req.body);
 
   City.findOne({ name: req.body.cityName }, (err, city) => {
@@ -46,7 +46,7 @@ router.post("/add", (req, res) => {
   });
 });
 
-// @route   GET api/itinerary/:cityName
+// @route   GET api/itineraries/:cityName
 // @desc    Get itineraries by city
 // @access  Public
 router.get("/:cityName", (req, res) => {

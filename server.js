@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const cors = require("./middleware/cors");
 
 // routes
-const cityRoutes = require("./routes/api/city");
-const inineraryRoutes = require("./routes/api/itinerary");
+const cityRoutes = require("./routes/api/cities");
+const inineraryRoutes = require("./routes/api/itineraries");
 
 // initialize app
 const app = express();
@@ -31,8 +31,8 @@ mongoose
   .catch(err => console.log(err));
 
 // Use Routes
-app.use("/api/city", cityRoutes);
-app.use("/api/itinerary", inineraryRoutes);
+app.use("/api/cities", cityRoutes);
+app.use("/api/itineraries", inineraryRoutes);
 
 // Set up the port and send a msg when start the server
 const port = process.env.PORT || 5000;
