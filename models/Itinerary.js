@@ -34,18 +34,6 @@ const itinerarySchema = new Schema({
   tags: {
     type: [String]
   },
-  activities: [
-    {
-      name: {
-        type: String,
-        required: true
-      },
-      url: {
-        type: String,
-        required: true
-      }
-    }
-  ],
   images: [
     {
       name: {

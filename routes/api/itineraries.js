@@ -34,10 +34,9 @@ router.post("/", (req, res) => {
       rating: req.body.rating,
       likes: req.body.likes,
       duration: req.body.duration,
-      priceRange: req.body.priceRange,
-      tags: req.body.tags,
-      activities: req.body.activities,
-      images: req.body.images
+      priceRange: req.body.priceRange
+      //tags: req.body.tags, // this will be a problem in app - or csv or additional POST
+      //images: req.body.images // this will be a problem in app - rather only additional POST req
     });
 
     newItinerary.save(err => {
