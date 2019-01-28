@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 // @access  Public
 router.get("/full", (req, res) => {
   City.find()
-    .populate("itineraries", ["id", "name"])
+    .populate("itinerary", ["id", "name"])
     .then(docs => res.send(docs))
     .catch(err => console.log(err));
 });

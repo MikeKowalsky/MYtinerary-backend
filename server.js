@@ -7,6 +7,7 @@ const cors = require("./middleware/cors");
 // routes
 const cityRoutes = require("./routes/api/cities");
 const inineraryRoutes = require("./routes/api/itineraries");
+const usersRoutes = require("./routes/api/users");
 
 // initialize app
 const app = express();
@@ -33,6 +34,7 @@ mongoose
 // Use Routes
 app.use("/api/cities", cityRoutes);
 app.use("/api/itineraries", inineraryRoutes);
+app.use("/api/users", usersRoutes);
 
 // Set up the port and send a msg when start the server
 const port = process.env.PORT || 5000;
