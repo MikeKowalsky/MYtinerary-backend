@@ -4,6 +4,9 @@
 # client app
 /client
 
+# keys
+/config/keys.js
+
 # mern_one.code-workspace
 /mern_one.code-workspace
 

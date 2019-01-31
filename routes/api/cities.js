@@ -13,14 +13,14 @@ router.get("/", (req, res) => {
     .catch(err => console.log(err));
 });
 
-// @route   GET api/cities/full
-// @desc    Get all cities with itinerary array
-// @access  Public
-router.get("/full", (req, res) => {
-  City.find()
-    .populate("itinerary", ["id", "name"])
-    .then(docs => res.send(docs))
-    .catch(err => console.log(err));
-});
+// // @route   GET api/cities/full
+// // @desc    Get all cities with itinerary array
+// // @access  Public
+// router.get("/full", (req, res) => {
+//   City.find()
+//     .populate("itinerary", ["id", "name"])
+//     .then(docs => res.send(docs))
+//     .catch(err => console.log(err));
+// });
 
 module.exports = router;
