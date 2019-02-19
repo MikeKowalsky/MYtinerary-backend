@@ -22,19 +22,18 @@ router.get("/", (req, res) => {
 // @desc    Add itinerary
 // @access  Public
 router.post("/", (req, res) => {
-  // console.log(req.body);
-
   City.findOne({ name: req.body.cityName }, (err, city) => {
-    if (err) console.log(err);
+    if (err) throw err;
+    const { author, name, rating, likes, duration, priceRange } = req.body;
     const newItinerary = new Itinerary({
       _id: new mongoose.Types.ObjectId(),
-      author: req.body.author,
+      author,
       city: city._id,
-      name: req.body.name,
-      rating: req.body.rating,
-      likes: req.body.likes,
-      duration: req.body.duration,
-      priceRange: req.body.priceRange
+      name,
+      rating,
+      likes,
+      duration,
+      priceRange
       //tags: req.body.tags, // this will be a problem in app - or csv or additional POST
       //images: req.body.images // this will be a problem in app - rather only additional POST req
     });
@@ -51,14 +50,12 @@ router.post("/", (req, res) => {
 // @desc    Get itineraries by city
 // @access  Public
 router.get("/:cityName", (req, res) => {
-  console.log(req.params.cityName);
-
   City.findOne({ name: req.params.cityName }, (err, city) => {
-    if (err) console.log(err);
+    if (err) throw err;
     const cityId = city._id;
 
     Itinerary.find({ city: cityId }, (err, itineraryList) => {
-      if (err) console.log(err);
+      if (err) throw err;
       res.send(itineraryList);
     });
   });
