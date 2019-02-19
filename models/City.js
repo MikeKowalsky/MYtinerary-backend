@@ -10,22 +10,7 @@ const schema = new Schema({
   country: {
     type: String,
     required: true
-  },
-  itineraries: [
-    {
-      id: {
-        type: Schema.Types.ObjectId,
-        ref: "Inerinary"
-      }
-    }
-    // {
-    //   id: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "inerinaries"
-    //   },
-    //   name: String
-    // }
-  ]
+  }
 });
 
 //Export schema as a module
