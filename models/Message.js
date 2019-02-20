@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Create schema
 const messageSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -30,5 +29,4 @@ const messageSchema = new Schema({
   ]
 });
 
-//Export schema as a module
 module.exports = mongoose.model("Message", messageSchema);

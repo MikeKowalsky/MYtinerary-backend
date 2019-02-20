@@ -1,10 +1,13 @@
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const mongoose = require("mongoose");
-const User = mongoose.model("User");
 const keys = require("../config/keys");
 
+const User = mongoose.model("User");
+
 const opts = {};
+// take bearer from the Authorization Header in request
+// we are setting this for axios
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = keys.JWT_SECRET;
 

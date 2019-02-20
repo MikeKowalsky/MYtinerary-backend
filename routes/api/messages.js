@@ -1,14 +1,11 @@
 const express = require("express");
-const router = express.Router();
 const passport = require("passport");
+const { isEmpty } = require("../../validation/is-empty");
 
 // meassage model
 const Message = require("../../models/Message");
 
-// @route   GET api/messages/test
-// @desc    Just testing
-// @access  Public
-router.get("/test", (req, res) => res.json({ msg: "Testing messages route" }));
+const router = express.Router();
 
 // @route   GET api/messages
 // @desc    Get all messages
@@ -27,7 +24,7 @@ router.get("/:id", (req, res) => {
   Message.findById(req.params.id)
     .then(message => res.json(message))
     .catch(err =>
-      res.status(404).json({ error: "No message with this is found!" })
+      res.status(404).json({ error: "No message with this id found!" })
     );
 });
 
@@ -38,20 +35,23 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    // validation needed
+    const { text, name, avatar } = req.body;
+
+    // validation
+    if (isEmpty(text) || isEmpty(name))
+      return res.status(400).json({ error: "Text and name can't be empty!" });
 
     const newMessage = new Message({
       user: req.user.id,
-      text: req.body.text,
-      name: req.body.name,
-      avatar: req.body.avatar
+      text,
+      name,
+      avatar
     });
 
-    // watch it
     newMessage
       .save()
       .then(message => res.json(message))
-      .catch(err => res.status(400).json({ error: "Save error" }));
+      .catch(err => res.status(403).json({ error: "Save error" }));
   }
 );
 
