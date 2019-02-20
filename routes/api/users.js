@@ -1,18 +1,13 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-// Load keys
+const { isEmpty } = require("../../validation/is-empty");
 const keys = require("../../config/keys");
 
 // Load users model
 const User = require("../../models/User");
 
-// @route   GET api/users
-// @desc    Get all users
-// @access  Public
-router.get("/test", (req, res) => res.json({ msg: "Testing users routes" }));
+const router = express.Router();
 
 // @route   POST api/users/register
 // @desc    Register new user
@@ -26,6 +21,12 @@ router.post("/register", (req, res) => {
 
     const { name, email, password } = req.body;
     const avatar = req.body.avatar || null;
+
+    // simple validation
+    if (isEmpty(name) || isEmpty(email) || isEmpty(password))
+      return res
+        .status(400)
+        .json({ error: "Name, email, password can't be empty!" });
 
     const newUser = new User({
       name,

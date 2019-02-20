@@ -7,6 +7,7 @@ const itinerarySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "City"
   },
+  // TODO: should be taken from the user account
   author: {
     type: String,
     required: true
@@ -15,14 +16,8 @@ const itinerarySchema = new Schema({
     type: String,
     required: true
   },
-  rating: {
-    type: Number,
-    required: true
-  },
-  likes: {
-    type: Number,
-    required: true
-  },
+  rating: Number,
+  likes: Number,
   duration: {
     type: Number,
     required: true
