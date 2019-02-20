@@ -31,9 +31,11 @@ router.get("/:id", (req, res) => {
 
 // @route   GET api/messages/itinerary/:id
 // @desc    Get messages by id
-// @access  Public
-router.get("/itinerary/:id", (req, res) => {
+// @access  Public -> if NaN is in the secon parameter, then all are fetched
+router.get("/itinerary/:id/:limit", (req, res) => {
   Message.find({ itineraryId: req.params.id })
+    .sort({ timeStamp: -1 })
+    .limit(+req.params.limit)
     .then(messages => res.json(messages))
     .catch(err =>
       res.status(404).json({ error: "No messages for this itinerary!" })
