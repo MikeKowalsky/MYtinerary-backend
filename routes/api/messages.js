@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
-const { isEmpty } = require("../../validation/is-empty");
+const mongoose = require("mongoose");
+const isEmpty = require("../../validation/is-empty");
 
 // meassage model
 const Message = require("../../models/Message");
@@ -14,7 +15,7 @@ router.get("/", (req, res) => {
   Message.find()
     .sort({ timeStamp: -1 })
     .then(messages => res.json(messages))
-    .catch((err = res.status(404).json({ error: "No messages found!" })));
+    .catch(err => res.status(404).json({ error: "No messages found!" }));
 });
 
 // @route   GET api/messages/:id
@@ -28,6 +29,17 @@ router.get("/:id", (req, res) => {
     );
 });
 
+// @route   GET api/messages/itinerary/:id
+// @desc    Get messages by id
+// @access  Public
+router.get("/itinerary/:id", (req, res) => {
+  Message.find({ itineraryId: req.params.id })
+    .then(messages => res.json(messages))
+    .catch(err =>
+      res.status(404).json({ error: "No messages for this itinerary!" })
+    );
+});
+
 // @route   POST api/messages
 // @desc    Create message
 // @access  Private
@@ -35,7 +47,7 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { text, name, avatar } = req.body;
+    const { text, name, avatar, itineraryId } = req.body;
 
     // validation
     if (isEmpty(text) || isEmpty(name))
@@ -45,6 +57,7 @@ router.post(
       user: req.user.id,
       text,
       name,
+      itineraryId,
       avatar
     });
 

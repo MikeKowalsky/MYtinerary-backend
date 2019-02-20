@@ -6,6 +6,7 @@ const messageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users"
   },
+  itineraryId: Schema.Types.ObjectId,
   text: {
     type: String,
     required: true

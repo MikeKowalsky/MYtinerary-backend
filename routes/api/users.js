@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { isEmpty } = require("../../validation/is-empty");
+const isEmpty = require("../../validation/is-empty");
 const keys = require("../../config/keys");
 
 // Load users model

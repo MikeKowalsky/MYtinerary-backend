@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { isEmpty } = require("../../validation/is-empty");
+const isEmpty = require("../../validation/is-empty");
 
 // Load itinerary model
 const Itinerary = require("../../models/Itinerary");
