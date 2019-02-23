@@ -91,13 +91,11 @@ router.get("/:cityName", (req, res) => {
 
 // @route   POST api/itineraries/addToFav
 // @desc    Add itinerary to favorites
-// @access  Provate
+// @access  Private
 router.post(
   "/addToFav",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log(req.user.id);
-    console.log(req.body);
     User.findOne({ _id: req.user.id })
       .then(user => {
         if (
@@ -110,6 +108,38 @@ router.post(
             .json({ error: "User already like this itinerary!" });
 
         user.favoriteItis.push(req.body.itineraryId);
+        user
+          .save()
+          .then(user => res.json(user))
+          .catch(err => res.status(500).json({ error: "Save error" }));
+      })
+      .catch(err => res.status(404).json({ error: "User not found!" }));
+  }
+);
+
+// @route   POST api/itineraries/removeFromFav
+// @desc    Remove itinerary from favorites
+// @access  Private
+router.post(
+  "/removeFromFav",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findOne({ _id: req.user.id })
+      .then(user => {
+        if (
+          user.favoriteItis.filter(
+            itinerary => itinerary._id.toString() === req.body.itineraryId
+          ).length === 0
+        )
+          return res
+            .status(400)
+            .json({ error: "User does not like this itinerary!" });
+
+        const indexToRemove = user.favoriteItis
+          .map(item => item._id.toString())
+          .indexOf(req.body.itineraryId);
+
+        user.favoriteItis.splice(indexToRemove, 1);
         user
           .save()
           .then(user => res.json(user))
