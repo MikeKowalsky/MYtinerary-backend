@@ -8,9 +8,16 @@ const itinerarySchema = new Schema({
     ref: "City"
   },
   // TODO: should be taken from the user account
-  author: {
-    type: String,
-    required: true
+  user: {
+    name: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: Schema.Types.ObjectId,
+      required: true
+    },
+    avatar: String
   },
   name: {
     type: String,
