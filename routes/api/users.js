@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const passport = require("passport");
 const isEmpty = require("../../validation/is-empty");
 const keys = require("../../config/keys");
 
@@ -86,5 +87,18 @@ router.post("/login", (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+// @route   POST api/users
+// @desc    User details
+// @access  Private
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findOne({ _id: req.user.id })
+      .then(user => res.json(user))
+      .catch(err => res.status(404).json({ error: "User does not exist!" }));
+  }
+);
 
 module.exports = router;
