@@ -70,4 +70,30 @@ router.post(
   }
 );
 
+// @route   DELETE api/messages/:id
+// @desc    Delete message
+// @access  Private
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Message.findById(req.params.id)
+      .then(message => {
+        if (message.user.toString() !== req.user.id) {
+          return res
+            .status(401)
+            .json({ error: "User is not an owner of this message!" });
+        }
+
+        message
+          .remove()
+          .then(result => res.json({ sucess: true }))
+          .catch(err => res.status(404).json({ error: "Delete error" }));
+      })
+      .catch(err =>
+        res.status(404).json({ error: "There is no message with this id!" })
+      );
+  }
+);
+
 module.exports = router;

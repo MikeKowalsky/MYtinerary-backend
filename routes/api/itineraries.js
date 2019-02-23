@@ -60,6 +60,16 @@ router.post("/", (req, res) => {
   });
 });
 
+// @route   GET api/itineraries/single/:id
+// @desc    Get itinerary by id
+// @access  Public
+router.get("/single/:id", (req, res) => {
+  Itinerary.find({ _id: req.params.id }, (err, itineraryList) => {
+    if (err) throw err;
+    res.send(itineraryList[0]);
+  });
+});
+
 // @route   GET api/itineraries/:cityName
 // @desc    Get itineraries by city
 // @access  Public
