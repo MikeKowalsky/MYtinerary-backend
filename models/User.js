@@ -20,7 +20,15 @@ const userSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  favoriteItis: [
+    {
+      itinerary: {
+        type: Schema.Types.ObjectId,
+        ref: "itineraries"
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const isEmpty = require("../../validation/is-empty");
 
 // Load itinerary model
@@ -7,6 +8,9 @@ const Itinerary = require("../../models/Itinerary");
 
 // Load city model
 const City = require("../../models/City");
+
+// Load user model
+const User = require("../../models/User");
 
 const router = express.Router();
 
@@ -84,5 +88,35 @@ router.get("/:cityName", (req, res) => {
     });
   });
 });
+
+// @route   POST api/itineraries/addToFav
+// @desc    Add itinerary to favorites
+// @access  Provate
+router.post(
+  "/addToFav",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    console.log(req.user.id);
+    console.log(req.body);
+    User.findOne({ _id: req.user.id })
+      .then(user => {
+        if (
+          user.favoriteItis.filter(
+            itinerary => itinerary._id.toString() === req.body.itineraryId
+          ).length > 0
+        )
+          return res
+            .status(400)
+            .json({ error: "User already like this itinerary!" });
+
+        user.favoriteItis.push(req.body.itineraryId);
+        user
+          .save()
+          .then(user => res.json(user))
+          .catch(err => res.status(500).json({ error: "Save error" }));
+      })
+      .catch(err => res.status(404).json({ error: "User not found!" }));
+  }
+);
 
 module.exports = router;
