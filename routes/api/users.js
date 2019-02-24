@@ -68,7 +68,11 @@ router.post("/login", (req, res) => {
             .json({ error: "Invalid username or password" });
 
         // JWT Token payload
-        const payload = { id: user.id, name: user.name, avatar: user.avatar };
+        const payload = {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar
+        };
 
         // JWT sign
         jwt.sign(
@@ -102,6 +106,23 @@ router.get(
         delete userDetails.password;
 
         res.json(userDetails);
+      })
+      .catch(err => res.status(404).json({ error: "User does not exist!" }));
+  }
+);
+
+// @route   POST api/users/favorites
+// @desc    User favorites itineraries
+// @access  Private
+router.get(
+  "/favorites",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findOne({ _id: req.user.id })
+      .then(response => {
+        // take only favorites
+        const userFavorites = [...response._doc.favoriteItis];
+        res.json(userFavorites);
       })
       .catch(err => res.status(404).json({ error: "User does not exist!" }));
   }

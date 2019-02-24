@@ -100,17 +100,17 @@ router.post(
       .then(user => {
         if (
           user.favoriteItis.filter(
-            itinerary => itinerary._id.toString() === req.body.itineraryId
+            itinerary => itinerary._id.toString() === req.body.id.toString()
           ).length > 0
         )
           return res
             .status(400)
             .json({ error: "User already like this itinerary!" });
 
-        user.favoriteItis.push(req.body.itineraryId);
+        user.favoriteItis.push(req.body.id.toString());
         user
           .save()
-          .then(user => res.json(user))
+          .then(user => res.json(user.favoriteItis))
           .catch(err => res.status(500).json({ error: "Save error" }));
       })
       .catch(err => res.status(404).json({ error: "User not found!" }));
@@ -127,25 +127,28 @@ router.post(
     User.findOne({ _id: req.user.id })
       .then(user => {
         if (
-          user.favoriteItis.filter(
-            itinerary => itinerary._id.toString() === req.body.itineraryId
-          ).length === 0
-        )
+          !Array.from(user.favoriteItis.map(e => e._id.toString())).includes(
+            req.body.id.toString()
+          )
+        ) {
           return res
             .status(400)
             .json({ error: "User does not like this itinerary!" });
+        }
 
         const indexToRemove = user.favoriteItis
           .map(item => item._id.toString())
-          .indexOf(req.body.itineraryId);
+          .indexOf(req.body.id.toString());
 
         user.favoriteItis.splice(indexToRemove, 1);
         user
           .save()
-          .then(user => res.json(user))
+          .then(user => res.json(user.favoriteItis))
           .catch(err => res.status(500).json({ error: "Save error" }));
       })
-      .catch(err => res.status(404).json({ error: "User not found!" }));
+      .catch(err =>
+        res.status(404).json({ error: "User not found!", err: err })
+      );
   }
 );
 
