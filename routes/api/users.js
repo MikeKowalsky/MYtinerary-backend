@@ -96,7 +96,13 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     User.findOne({ _id: req.user.id })
-      .then(user => res.json(user))
+      .then(response => {
+        // remove password before sending back
+        const userDetails = Object.assign({}, response._doc);
+        delete userDetails.password;
+
+        res.json(userDetails);
+      })
       .catch(err => res.status(404).json({ error: "User does not exist!" }));
   }
 );
