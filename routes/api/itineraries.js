@@ -26,43 +26,59 @@ router.get("/", (req, res) => {
 
 // @route   POST api/itineraries
 // @desc    Add itinerary
-// @access  Public
-router.post("/", (req, res) => {
-  City.findOne({ name: req.body.cityName }, (err, city) => {
-    if (err) throw err;
-    const { author, name, rating, likes, duration, priceRange } = req.body;
+// @access  Private
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    City.findOne({ _id: req.body.cityId }, (err, city) => {
+      if (err) throw err;
+      const { name, duration, priceRange, images } = req.body;
 
-    // validation
-    if (
-      isEmpty(author) ||
-      isEmpty(name) ||
-      isEmpty(duration) ||
-      isEmpty(priceRange)
-    )
-      return res
-        .status(400)
-        .json({ error: "Author, name, duration, price range can't be empty!" });
+      // validation
+      if (isEmpty(name) || isEmpty(duration) || isEmpty(priceRange))
+        return res
+          .status(400)
+          .json({ error: "Name, duration, price range can't be empty!" });
 
-    const newItinerary = new Itinerary({
-      _id: new mongoose.Types.ObjectId(),
-      author,
-      city: city._id,
-      name,
-      rating,
-      likes,
-      duration,
-      priceRange
-      //tags: req.body.tags, // this will be a problem in app - or csv or additional POST
-      //images: req.body.images // this will be a problem in app - rather only additional POST req
+      const rating = 4; // default in the beginnng
+      const likes = 0;
+      // tag will come as strings with words separated with # signs
+      // eg #architecture #Gaudi #barcelona #sun
+      const tagArray = [];
+      req.body.tags.split("#").forEach(e => {
+        if (e !== "") {
+          tagArray.push(e.trim());
+        }
+      });
+
+      const userObj = {
+        id: req.user._id,
+        name: req.user.name,
+        avatar: req.user.avatar
+      };
+
+      const newItinerary = new Itinerary({
+        _id: new mongoose.Types.ObjectId(),
+        user: userObj,
+        city: city._id,
+        name,
+        rating,
+        likes,
+        duration,
+        priceRange,
+        tags: tagArray,
+        images: JSON.parse(images)
+      });
+
+      newItinerary.save(err => {
+        if (err) console.log(err);
+      });
+
+      res.status(201).json(newItinerary);
     });
-
-    newItinerary.save(err => {
-      if (err) console.log(err);
-    });
-
-    res.status(201).json(newItinerary);
-  });
-});
+  }
+);
 
 // @route   GET api/itineraries/single/:id
 // @desc    Get itinerary by id
