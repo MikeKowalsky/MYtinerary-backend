@@ -23,10 +23,9 @@ const userSchema = new Schema({
   },
   favoriteItis: [
     {
-      itinerary: {
-        type: Schema.Types.ObjectId,
-        ref: "itineraries"
-      }
+      itineraryId: String,
+      name: String,
+      cityId: String
     }
   ]
 });
