@@ -9,9 +9,6 @@ const Itinerary = require("../../models/Itinerary");
 // Load city model
 const City = require("../../models/City");
 
-// Load user model
-const User = require("../../models/User");
-
 const router = express.Router();
 
 // @route   GET api/itineraries
@@ -91,7 +88,7 @@ router.get("/single/:id", (req, res) => {
 });
 
 // @route   GET api/itineraries/:cityName
-// @desc    Get itineraries by city
+// @desc    Get itineraries by cityName
 // @access  Public
 router.get("/:cityName", (req, res) => {
   City.findOne({ name: req.params.cityName }, (err, city) => {
@@ -104,5 +101,19 @@ router.get("/:cityName", (req, res) => {
     });
   });
 });
+
+// @route   GET api/itineraries/user/list
+// @desc    Get itineraries by userId
+// @access  Priavte
+router.get(
+  "/user/list",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Itinerary.find({ "user.id": req.user.id }, (err, itineraryList) => {
+      if (err) throw err;
+      res.send(itineraryList);
+    });
+  }
+);
 
 module.exports = router;
