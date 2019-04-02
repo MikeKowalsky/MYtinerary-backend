@@ -23,8 +23,7 @@ router.post("/register", (req, res) => {
         .status(400)
         .json({ error: "User already exist! Email needs to be unique." });
 
-    const { name, email, password } = req.body;
-    const avatar = req.body.avatar || null;
+    const { name, email, password, avatar } = req.body;
 
     // simple validation
     if (isEmpty(name) || isEmpty(email) || isEmpty(password))
@@ -207,5 +206,10 @@ router.post(
       );
   }
 );
+
+// @route   POST api/users/oauth
+// @desc
+// @access  Private
+router.post("/oauth", passport.authenticate("googleToken", { session: false }));
 
 module.exports = router;

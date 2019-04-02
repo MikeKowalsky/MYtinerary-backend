@@ -32,13 +32,15 @@ mongoose
 
 // passport middleware configuaration
 app.use(passport.initialize());
-require("./config/passport")(passport);
+require("./config/passport");
 
 // use Routes
 app.use("/api/cities", cityRoutes);
 app.use("/api/itineraries", inineraryRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/messages", messagesRoutes);
+
+// TODO: add 404
 
 // set up the port and send a msg when start the server
 const port = process.env.PORT || 5000;
