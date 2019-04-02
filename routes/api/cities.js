@@ -2,15 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 // Load city model
-const City = require("../../models/City");
+// const City = require("../../models/City");
+
+const citiesController = require("../../controllers/cities");
 
 // @route   GET api/cities
 // @desc    Get all cities
 // @access  Public
-router.get("/", (req, res) => {
-  City.find()
-    .then(docs => res.send(docs))
-    .catch(err => console.log(err));
-});
+router.get("/", citiesController.getCities);
 
 module.exports = router;

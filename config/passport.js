@@ -36,7 +36,7 @@ passport.use(
       clientID: keys.GOOGLE_CLIENT_ID,
       clientSecret: keys.GOOGLE_CLIENT_SECRET
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (req, accessToken, refreshToken, profile, next) => {
       // Should have full user profile over here
       console.log("profile", profile);
       console.log("accessToken", accessToken);
