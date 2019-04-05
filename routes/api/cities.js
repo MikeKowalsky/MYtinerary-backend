@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// Load city model
-// const City = require("../../models/City");
-
 const citiesController = require("../../controllers/cities");
 
 // @route   GET api/cities

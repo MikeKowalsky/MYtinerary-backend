@@ -1,25 +1,14 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const passport = require("passport");
-const isEmpty = require("../../validation/is-empty");
 
-// Load itinerary model
-const Itinerary = require("../../models/Itinerary");
-
-// Load city model
-const City = require("../../models/City");
+const itinerariesController = require("../../controllers/itineraries");
 
 const router = express.Router();
 
 // @route   GET api/itineraries
 // @desc    Get all itineraries
 // @access  Public
-router.get("/", (req, res) => {
-  Itinerary.find()
-    .populate("city", ["id", "name"])
-    .then(docs => res.send(docs))
-    .catch(err => console.log(err));
-});
+router.get("/", itinerariesController.getItineraries);
 
 // @route   POST api/itineraries
 // @desc    Add itinerary
@@ -27,80 +16,18 @@ router.get("/", (req, res) => {
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    City.findOne({ _id: req.body.cityId }, (err, city) => {
-      if (err) throw err;
-      const { name, duration, priceRange, images } = req.body;
-
-      // validation
-      if (isEmpty(name) || isEmpty(duration) || isEmpty(priceRange))
-        return res
-          .status(400)
-          .json({ error: "Name, duration, price range can't be empty!" });
-
-      const rating = 4; // default in the beginnng
-      const likes = 0;
-      // tag will come as strings with words separated with # signs
-      // eg #architecture #Gaudi #barcelona #sun
-      const tagArray = [];
-      req.body.tags.split("#").forEach(e => {
-        if (e !== "") {
-          tagArray.push(e.trim());
-        }
-      });
-
-      const userObj = {
-        id: req.user._id,
-        name: req.user.name,
-        avatar: req.user.avatar
-      };
-
-      const newItinerary = new Itinerary({
-        _id: new mongoose.Types.ObjectId(),
-        user: userObj,
-        city: city._id,
-        name,
-        rating,
-        likes,
-        duration,
-        priceRange,
-        tags: tagArray,
-        images: JSON.parse(images)
-      });
-
-      newItinerary.save(err => {
-        if (err) console.log(err);
-      });
-
-      res.status(201).json(newItinerary);
-    });
-  }
+  itinerariesController.addItinerary
 );
 
 // @route   GET api/itineraries/single/:id
 // @desc    Get itinerary by id
 // @access  Public
-router.get("/single/:id", (req, res) => {
-  Itinerary.find({ _id: req.params.id }, (err, itineraryList) => {
-    if (err) throw err;
-    res.send(itineraryList[0]);
-  });
-});
+router.get("/single/:id", itinerariesController.getItinerary);
 
 // @route   GET api/itineraries/:cityName
 // @desc    Get itineraries by cityName
 // @access  Public
-router.get("/:cityName", (req, res) => {
-  City.findOne({ name: req.params.cityName }, (err, city) => {
-    if (err) throw err;
-    const cityId = city._id;
-
-    Itinerary.find({ city: cityId }, (err, itineraryList) => {
-      if (err) throw err;
-      res.send(itineraryList);
-    });
-  });
-});
+router.get("/:cityName", itinerariesController.getItinerariesByCityName);
 
 // @route   GET api/itineraries/user/list
 // @desc    Get itineraries by userId
@@ -108,12 +35,7 @@ router.get("/:cityName", (req, res) => {
 router.get(
   "/user/list",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Itinerary.find({ "user.id": req.user.id }, (err, itineraryList) => {
-      if (err) throw err;
-      res.send(itineraryList);
-    });
-  }
+  itinerariesController.getItinerariesByUser
 );
 
 module.exports = router;
